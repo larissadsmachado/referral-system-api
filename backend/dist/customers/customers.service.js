@@ -64,6 +64,13 @@ let CustomersService = class CustomersService {
         }
         return response;
     }
+    async findAll() {
+        const customers = await this.customerModel
+            .find()
+            .sort({ created_at: -1 })
+            .exec();
+        return customers.map((customer) => this.toResponse(customer));
+    }
     async findReferrer(customerId) {
         if (!OBJECT_ID_PATTERN.test(customerId)) {
             throw new common_1.BadRequestException('parent_customer_id precisa ser um ObjectId válido.');

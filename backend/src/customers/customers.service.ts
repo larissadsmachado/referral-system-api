@@ -69,6 +69,15 @@ export class CustomersService {
     return response;
   }
 
+  async findAll(): Promise<CustomerResponse[]> {
+    const customers = await this.customerModel
+      .find()
+      .sort({ created_at: -1 })
+      .exec();
+
+    return customers.map((customer) => this.toResponse(customer));
+  }
+
   private async findReferrer(customerId: string): Promise<string> {
     if (!OBJECT_ID_PATTERN.test(customerId)) {
       throw new BadRequestException(

@@ -10,6 +10,7 @@ export declare class CustomersService {
     private readonly indicationEventsService;
     constructor(customerModel: Model<Customer>, redisService: RedisService, indicationEventsService: IndicationEventsService);
     create(dto: CreateCustomerDto): Promise<CustomerResponse>;
+    findAll(): Promise<CustomerResponse[]>;
     private findReferrer;
     private toCacheEntry;
     private toResponse;

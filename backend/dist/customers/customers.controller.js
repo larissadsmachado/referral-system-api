@@ -24,6 +24,9 @@ let CustomersController = class CustomersController {
     create(createCustomerDto) {
         return this.customersService.create(createCustomerDto);
     }
+    findAll() {
+        return this.customersService.findAll();
+    }
 };
 exports.CustomersController = CustomersController;
 __decorate([
@@ -34,6 +37,12 @@ __decorate([
     __metadata("design:paramtypes", [create_customer_dto_1.CreateCustomerDto]),
     __metadata("design:returntype", void 0)
 ], CustomersController.prototype, "create", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], CustomersController.prototype, "findAll", null);
 exports.CustomersController = CustomersController = __decorate([
     (0, common_1.Controller)('customers'),
     __metadata("design:paramtypes", [customers_service_1.CustomersService])

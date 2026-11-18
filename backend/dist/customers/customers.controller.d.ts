@@ -4,4 +4,5 @@ export declare class CustomersController {
     private readonly customersService;
     constructor(customersService: CustomersService);
     create(createCustomerDto: CreateCustomerDto): Promise<import("./customer.types").CustomerResponse>;
+    findAll(): Promise<import("./customer.types").CustomerResponse[]>;
 }
