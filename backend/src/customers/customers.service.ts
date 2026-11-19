@@ -28,6 +28,7 @@ export class CustomersService {
     private readonly indicationEventsService: IndicationEventsService,
   ) {}
 
+ 
   async create(dto: CreateCustomerDto): Promise<CustomerResponse> {
     const name = dto.name.trim();
     const email = dto.email.trim().toLowerCase();
@@ -101,7 +102,7 @@ export class CustomersService {
     return customer._id.toString();
   }
 
-  private toCacheEntry(customer: CustomerDocument): CustomerCacheEntry {
+  private toCacheEntry(customer: CustomerDocument): CustomerCacheEntry { 
     return {
       _id: customer._id.toString(),
       name: customer.name,

@@ -7,6 +7,7 @@ import { CustomersModule } from './customers/customers.module';
 import { IndicationsModule } from './indications/indications.module';
 import { RedisModule } from './redis/redis.module';
 import { ReportsModule } from './reports/reports.module';
+import { DocsController } from './docs/docs.controller';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { ReportsModule } from './reports/reports.module';
     IndicationsModule,
     CustomersModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, DocsController],
   providers: [AppService],
 })
 export class AppModule {}
