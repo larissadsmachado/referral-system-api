@@ -1,4 +1,4 @@
-export interface CustomerCacheEntry {
+export interface CustomerCacheEntry {  //formato do cliente guardado no Redis.
   _id: string;
   name: string;
   email: string;
@@ -7,7 +7,8 @@ export interface CustomerCacheEntry {
   created_at: string;
 }
 
-export interface CustomerResponse {
+//formato do cliente devolvido pela API
+export interface CustomerResponse { 
   customer_id: string;
   name: string;
   email: string;

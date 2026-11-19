@@ -10,7 +10,7 @@ exports.AppService = void 0;
 const common_1 = require("@nestjs/common");
 let AppService = class AppService {
     getHello() {
-        return 'Hello World!';
+        return 'ESSA É A API DO INIDICA E CONTA! V1.0.0';
     }
 };
 exports.AppService = AppService;

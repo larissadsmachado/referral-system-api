@@ -2,17 +2,17 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/commo
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CustomersService } from './customers.service';
 
-@Controller('customers')
+@Controller('customers') //clientes
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
-  @Post()
+  @Post() //cria um cliente
   @HttpCode(HttpStatus.CREATED)
   create(@Body() createCustomerDto: CreateCustomerDto) {
     return this.customersService.create(createCustomerDto);
   }
 
-  @Get()
+  @Get() //lista todos os clientes
   findAll() {
     return this.customersService.findAll();
   }
