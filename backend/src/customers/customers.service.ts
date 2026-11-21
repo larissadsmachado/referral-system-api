@@ -28,7 +28,7 @@ export class CustomersService {
     private readonly indicationEventsService: IndicationEventsService,
   ) {}
 
- 
+
   async create(dto: CreateCustomerDto): Promise<CustomerResponse> {
     const name = dto.name.trim();
     const email = dto.email.trim().toLowerCase();

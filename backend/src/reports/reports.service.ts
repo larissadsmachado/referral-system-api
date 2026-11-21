@@ -10,15 +10,16 @@ export interface ReportResponse {
 
 @Injectable()
 export class ReportsService {
+
   constructor(
-    @InjectModel(Report.name)
-    private readonly reportModel: Model<Report>,
+    @InjectModel(Report.name) 
+    private readonly reportModel: Model<Report>, //Biblioteca do Mongoose que representa o modelo de dados do Report, permitindo interações com o banco de dados
   ) {}
 
   async findAll(): Promise<ReportResponse[]> {
-    const reports = await this.reportModel
+    const reports = await this.reportModel 
       .find({}, { customer_id: 1, total_indications: 1, _id: 0 })
-      .lean()
+      .lean() //Mostrar somente os dados, sem os métodos Extras do Mongoose
       .exec();
 
     return reports.map((report) => ({

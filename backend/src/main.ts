@@ -15,11 +15,12 @@ async function bootstrap() {
       'http://localhost:5173',
     ),
   });
+
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
+      whitelist: true, // Remove propriedades não definidas no DTO
+      forbidNonWhitelisted: true, // Lança um erro se houver propriedades não definidas no DTO
+      transform: true, // Converte automaticamente os tipos de dados para os tipos definidos no DTO
     }),
   );
 
@@ -30,4 +31,5 @@ async function bootstrap() {
 
   await app.listen(port);
 }
+
 void bootstrap();
