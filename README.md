@@ -1,40 +1,105 @@
 # Indica e Conta
 
-API de indicação com NestJS, MongoDB, Redis e RabbitMQ, além de um frontend React.
+Aplicação de indicação de clientes com API NestJS, MongoDB, Redis e RabbitMQ, além de uma interface web em React.
 
-## Executar localmente
+## Requisitos
 
-Requer Node.js 20.19+ e Docker Compose.
+- Node.js 20.19 ou superior
+- npm
+- Docker Desktop com Docker Compose
 
-1. Na raiz, inicie MongoDB, Redis e RabbitMQ:
+## Primeira execução
 
-   ```sh
-   docker compose up -d
-   ```
+Execute os comandos abaixo no PowerShell, a partir da pasta raiz do projeto.
 
-2. No backend, configure `backend/.env` com base em `backend/.env.example` e inicie a API:
+### 1. Configure as variáveis de ambiente
 
-   ```sh
-   cd backend
-   npm install
-   npm run dev
-   ```
+Crie os arquivos `.env` a partir dos exemplos:
 
-3. Em outro terminal, configure `frontend/.env` com base em `frontend/.env.example` e inicie a interface:
+```powershell
+Copy-Item backend\.env.example backend\.env
+Copy-Item frontend\.env.example frontend\.env
+```
 
-   ```sh
-   cd frontend
-   npm install
-   npm run dev
-   ```
+Os valores de exemplo são suficientes para executar os serviços localmente. Altere-os se estiver usando portas ou serviços diferentes.
 
-O frontend usa `VITE_API_BASE_URL` para acessar a API. A API libera por padrão a origem `http://localhost:5173`, configurável por `FRONTEND_ORIGIN`.
+### 2. Inicie MongoDB, Redis e RabbitMQ
 
-## API
+Ainda na raiz do projeto:
 
-- Swagger UI: `http://localhost:3000/docs` (especificação OpenAPI em `/docs-json`).
-- `POST /customers`: recebe `{ "name": "...", "email": "..." }`; opcionalmente recebe `parent_customer_id`. Retorna o cadastro criado e `customer_id`.
-- `GET /customers`: lista os clientes cadastrados.
-- `GET /reports`: retorna uma lista de `{ "customer_id": "...", "total_indications": 0 }`.
+```powershell
+docker compose up -d
+```
 
-Clientes são persistidos no MongoDB e armazenados no Redis pela chave `customer:{customer_id}`. Uma indicação valida o cliente pai via Redis e usa o MongoDB como fallback. Eventos `customer.indication.created` são processados pelo RabbitMQ; o placar é eventualmente consistente e pode levar alguns segundos para atualizar.
+Confira se os serviços estão ativos:
+
+```powershell
+docker compose ps
+```
+
+### 3. Inicie a API
+
+Abra um terminal na raiz do projeto:
+
+```powershell
+cd backend
+npm install
+npm run dev
+```
+
+`npm install` é necessário apenas na primeira execução (ou quando as dependências mudarem). A API ficará disponível em `http://localhost:3000`. Mantenha esse terminal aberto.
+
+### 4. Inicie a interface web
+
+Abra um segundo terminal na raiz do projeto:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+`npm install` é necessário apenas na primeira execução (ou quando as dependências mudarem). Abra o endereço exibido pelo Vite, normalmente `http://localhost:5173`. Mantenha também esse terminal aberto.
+
+## Próximas execuções
+
+Depois da configuração inicial, não é necessário repetir `npm install` nem recriar os arquivos `.env`. Na raiz do projeto, inicie os serviços:
+
+```powershell
+docker compose up -d
+```
+
+Em dois terminais separados, inicie a API e a interface:
+
+```powershell
+cd backend
+npm run dev
+```
+
+```powershell
+cd frontend
+npm run dev
+```
+
+## Swagger e API
+
+O Swagger é servido pela API; não precisa iniciar um processo separado. Com a API em execução, abra:
+
+- Swagger UI: <http://localhost:3000/docs>
+- Especificação OpenAPI em JSON: <http://localhost:3000/docs-json>
+
+Endpoints principais:
+
+- `POST /customers`: cria um cliente com `name` e `email`; aceita opcionalmente `parent_customer_id`.
+- `GET /customers`: lista os clientes.
+- `GET /reports`: retorna o total de indicações por cliente.
+
+## Encerrar
+
+Pare a interface e a API com `Ctrl+C` nos respectivos terminais. Para parar os serviços do Docker, execute na raiz:
+
+```powershell
+docker compose down
+```
+
+Os dados do MongoDB ficam em um volume do Docker e são mantidos ao parar os containers.

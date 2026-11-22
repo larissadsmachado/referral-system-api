@@ -16,6 +16,7 @@ const customers_module_1 = require("./customers/customers.module");
 const indications_module_1 = require("./indications/indications.module");
 const redis_module_1 = require("./redis/redis.module");
 const reports_module_1 = require("./reports/reports.module");
+const docs_controller_1 = require("./docs/docs.controller");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -34,7 +35,7 @@ exports.AppModule = AppModule = __decorate([
             indications_module_1.IndicationsModule,
             customers_module_1.CustomersModule,
         ],
-        controllers: [app_controller_1.AppController],
+        controllers: [app_controller_1.AppController, docs_controller_1.DocsController],
         providers: [app_service_1.AppService],
     })
 ], AppModule);
