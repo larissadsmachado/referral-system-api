@@ -24,24 +24,24 @@ const OBJECT_ID_PATTERN = /^[\da-f]{24}$/i;
 export class IndicationEventsService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(IndicationEventsService.name);
   private readonly exchange: string;
-  private readonly queue: string;
+  private readonly queue: string; 
   private readonly routingKey: string;
-  private connection: ChannelModel | null = null;
-  private channel: ConfirmChannel | null = null;
+  private connection: ChannelModel | null = null; //Conexão entre a aplicação e o RabbitMQ
+  private channel: ConfirmChannel | null = null; //Canal de comunicação dentro dessa conexão
 
   constructor(
-    configService: ConfigService,
-    private readonly reportsService: ReportsService,
+    configService: ConfigService, //lê as configs
+    private readonly reportsService: ReportsService, //Permite att os relatórios
   ) {
-    this.exchange = configService.getOrThrow<string>('RABBITMQ_EXCHANGE');
-    this.queue = configService.getOrThrow<string>('RABBITMQ_QUEUE');
+    this.exchange = configService.getOrThrow<string>('RABBITMQ_EXCHANGE'); 
+    this.queue = configService.getOrThrow<string>('RABBITMQ_QUEUE');  
     this.routingKey = configService.getOrThrow<string>(
       'RABBITMQ_ROUTING_KEY',
     );
-    this.rabbitUrl = configService.getOrThrow<string>('RABBITMQ_URL');
+    this.rabbitUrl = configService.getOrThrow<string>('RABBITMQ_URL'); 
   }
 
-  private readonly rabbitUrl: string;
+  private readonly rabbitUrl: string; 
 
   async onModuleInit(): Promise<void> {
     this.connection = await amqp.connect(this.rabbitUrl);
@@ -62,7 +62,7 @@ export class IndicationEventsService implements OnModuleInit, OnModuleDestroy {
     });
     await this.channel.assertQueue(this.queue, { durable: true });
     await this.channel.bindQueue(this.queue, this.exchange, this.routingKey);
-    await this.channel.prefetch(1);
+    await this.channel.prefetch(1); 
     await this.channel.consume(
       this.queue,
       (message) => {
@@ -70,7 +70,7 @@ export class IndicationEventsService implements OnModuleInit, OnModuleDestroy {
           void this.handleMessage(message);
         }
       },
-      { noAck: false },
+      { noAck: false }, //Confirmação manual de que a mensagem foi ou não concluída. Vai ser feito a tratativa depois
     );
   }
 
@@ -83,6 +83,7 @@ export class IndicationEventsService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
+  //Enviar um evento ao Rabbit
   async publishIndicationCreated(
     event: IndicationCreatedEvent,
   ): Promise<void> {
@@ -97,8 +98,8 @@ export class IndicationEventsService implements OnModuleInit, OnModuleDestroy {
         this.routingKey,
         Buffer.from(JSON.stringify(event)),
         {
-          contentType: 'application/json',
-          persistent: true,
+          contentType: 'application/json', 
+          persistent: true, 
         },
         (error) => {
           if (error) {
@@ -111,6 +112,7 @@ export class IndicationEventsService implements OnModuleInit, OnModuleDestroy {
     });
   }
 
+  //Recebe a mensagen q veio do Rabbit e processa
   private async handleMessage(message: ConsumeMessage): Promise<void> {
     const channel = this.channel;
     if (!channel) {
@@ -144,7 +146,7 @@ export class IndicationEventsService implements OnModuleInit, OnModuleDestroy {
       await this.reportsService.incrementIndications(
         payload.parent_customer_id,
       );
-      channel.ack(message);
+      channel.ack(message); //mensagem processada
     } catch (error) {
       this.logger.error(
         'Failed to update the indication report; requeueing event.',
