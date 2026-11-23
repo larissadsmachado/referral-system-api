@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
-import { CustomerCacheEntry } from '../customers/customer.types';
+import { CustomerCacheEntry } from '../customers/customer.types'; 
 
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
@@ -26,7 +26,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleDestroy(): Promise<void> {
     if (this.client.status !== 'end') {
-      await this.client.quit();
+      await this.client.quit(); 
     }
   }
 
@@ -43,18 +43,19 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       if (!(error instanceof SyntaxError)) {
         throw error;
       }
-      this.logger.warn(`Ignoring invalid Redis cache for customer ${customerId}.`);
+      this.logger.warn(`Invalid Redis cache for customer ${customerId}.`);
       return null;
     }
 
     if (!isCustomerCacheEntry(entry) || entry._id !== customerId) {
-      this.logger.warn(`Ignoring invalid Redis cache for customer ${customerId}.`);
+      this.logger.warn(`Invalid Redis cache for customer ${customerId}.`);
       return null;
     }
 
     return entry;
   }
 
+   //Salva os dados do cliente no Redis
   async cacheCustomer(customer: CustomerCacheEntry): Promise<void> {
     await this.client.set(this.customerKey(customer._id), JSON.stringify(customer));
   }

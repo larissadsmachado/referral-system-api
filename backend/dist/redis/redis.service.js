@@ -47,11 +47,11 @@ let RedisService = RedisService_1 = class RedisService {
             if (!(error instanceof SyntaxError)) {
                 throw error;
             }
-            this.logger.warn(`Ignoring invalid Redis cache for customer ${customerId}.`);
+            this.logger.warn(`Invalid Redis cache for customer ${customerId}.`);
             return null;
         }
         if (!isCustomerCacheEntry(entry) || entry._id !== customerId) {
-            this.logger.warn(`Ignoring invalid Redis cache for customer ${customerId}.`);
+            this.logger.warn(`Invalid Redis cache for customer ${customerId}.`);
             return null;
         }
         return entry;

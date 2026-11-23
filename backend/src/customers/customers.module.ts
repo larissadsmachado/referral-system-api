@@ -4,13 +4,13 @@ import { IndicationsModule } from '../indications/indications.module';
 import { Customer, CustomerSchema } from './schemas/customer.schema';
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
-
+ 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Customer.name, schema: CustomerSchema },
     ]),
-    IndicationsModule,
+    IndicationsModule, //indicações
   ],
   controllers: [CustomersController],
   providers: [CustomersService],

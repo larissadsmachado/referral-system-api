@@ -18,10 +18,10 @@ import { DocsController } from './docs/docs.controller';
         uri: configService.getOrThrow<string>('MONGODB_URI'),
       }),
     }),
-    RedisModule,
-    ReportsModule,
-    IndicationsModule,
-    CustomersModule,
+    RedisModule, //redis
+    ReportsModule, //relatórios
+    IndicationsModule, //indicações
+    CustomersModule, //clientes
   ],
   controllers: [AppController, DocsController],
   providers: [AppService],

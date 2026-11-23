@@ -106,7 +106,7 @@ export class IndicationEventsService implements OnModuleInit, OnModuleDestroy {
             reject(error);
             return;
           }
-          resolve();
+          resolve(); //Mensagem publicada com sucesso
         },
       );
     });
@@ -152,7 +152,7 @@ export class IndicationEventsService implements OnModuleInit, OnModuleDestroy {
         'Failed to update the indication report; requeueing event.',
         error instanceof Error ? error.stack : String(error),
       );
-      channel.nack(message, false, true);
+      channel.nack(message, false, true); //reenfileira a mensagem para tentar processar novamente
     }
   }
 }

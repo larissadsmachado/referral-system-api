@@ -17,7 +17,7 @@ describe('AppController', () => {
   describe('root', () => {
     it('should return the API welcome message', () => {
       expect(appController.getHello()).toBe(
-        'ESSA É A API DO INIDICA E CONTA! V1.0.0',
+        'ESSA É A API TESTE DO INIDICA E CONTA! V1.0.0',
       );
     });
   });

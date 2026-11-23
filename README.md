@@ -94,6 +94,82 @@ Endpoints principais:
 - `GET /customers`: lista os clientes.
 - `GET /reports`: retorna o total de indicações por cliente.
 
+## Roteiro de testes no Postman
+
+Use `POST http://localhost:3000/customers`, selecione **Body > raw > JSON** e envie os exemplos abaixo. Se já tiver usado um e-mail, troque-o por outro único.
+
+### Sucesso: criar um cliente
+
+```json
+{
+  "name": "Cliente base de teste",
+  "email": "cliente.base.teste@example.com"
+}
+```
+
+Esperado: **201 Created**, com um `customer_id` gerado, `type: "NORMAL"` e `parent_customer_id: null`. Copie o `customer_id` retornado para o próximo teste. A API também grava esse cliente no Redis.
+
+### Sucesso: criar um cliente indicado e testar o cache
+
+Use o ID copiado no teste anterior:
+
+```json
+{
+  "name": "Cliente indicado de teste",
+  "email": "cliente.indicado.teste@example.com",
+  "parent_customer_id": "<customer_id copiado>"
+}
+```
+
+Esperado: **201 Created**, com `parent_customer_id` igual ao ID do cliente base. Como ele foi criado no teste anterior, a busca do indicador deve encontrá-lo no Redis.
+
+Para conferir a chave no Redis, substitua `<customer_id>` pelo ID real:
+
+```powershell
+docker compose exec redis redis-cli GET customer:<customer_id>
+```
+
+Para testar também o caminho de cache miss, remova somente essa chave de teste:
+
+```powershell
+docker compose exec redis redis-cli DEL customer:<customer_id>
+```
+
+Envie novamente a requisição de cliente indicado, usando outro e-mail e o mesmo `parent_customer_id`. Esperado: **201 Created**; a API busca o indicador no MongoDB e o grava novamente no Redis.
+
+### Erro: formato inválido do `parent_customer_id`
+
+```json
+{
+  "name": "Teste de ID inválido",
+  "email": "teste.id.invalido@example.com",
+  "parent_customer_id": "abc"
+}
+```
+
+Esperado: **400 Bad Request**, com uma mensagem de validação indicando que `parent_customer_id` deve ser um ID Mongo válido.
+
+### Erro: indicador não encontrado
+
+Use um ObjectId de 24 caracteres que não exista no banco (o exemplo abaixo funciona se nenhum registro tiver esse ID):
+
+```json
+{
+  "name": "Teste de indicador inexistente",
+  "email": "teste.indicador.inexistente@example.com",
+  "parent_customer_id": "000000000000000000000000"
+}
+```
+
+Esperado: **400 Bad Request**, com a mensagem `O customer indicado em parent_customer_id não foi encontrado.`
+
+### Erro: e-mail duplicado ou inválido
+
+- **Duplicado:** envie duas vezes o mesmo body de criação, sem `parent_customer_id`. A primeira requisição deve retornar **201 Created**; a segunda, **409 Conflict**, com a mensagem `Este e-mail já está cadastrado.`
+- **Inválido:** envie `"email": "nao-e-email"`. Esperado: **400 Bad Request**, com uma mensagem de validação do e-mail.
+
+As respostas de erro incluem `statusCode`, `error`, `message`, `timestamp` e `path`. Os valores exatos de `timestamp` e `path` dependem da requisição.
+
 ## Encerrar
 
 Pare a interface e a API com `Ctrl+C` nos respectivos terminais. Para parar os serviços do Docker, execute na raiz:
