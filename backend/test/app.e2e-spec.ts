@@ -27,7 +27,7 @@ describe('AppController (e2e)', () => {
 
     expect(response.status).toBe(200);
     expect(response.text).toBe(
-      'ESSA É A API DO INIDICA E CONTA! V1.0.0',
+      'ESSA É O TESTEA DA API DO INIDICA E CONTA! V1.0.0',
     );
   });
 
